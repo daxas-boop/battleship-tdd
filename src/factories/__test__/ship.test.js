@@ -1,4 +1,4 @@
-import shipFactory from '../shipFactory';
+import shipFactory from '../Ship';
 
 test('shipFactory returns an object', () => {
     const smallShip = shipFactory();
@@ -17,14 +17,9 @@ test('ship hit with no position return undefined' , () => {
     expect(smallShip.hit()).toBe(undefined);
 })
 
-test('ship gets hit', () => {
-    const smallShip = shipFactory(2);
-    expect(smallShip.hit(1)).toStrictEqual(['o','x']);
-    expect(smallShip.hit(0)).toStrictEqual(['x','x']);
-})
-
 test('ship isSunk method works', () => {
     const mediumShip = shipFactory(3);
+    expect(mediumShip.isSunk()).toBe(false);
     mediumShip.hit(1);
     expect(mediumShip.isSunk()).toBe(false);
     mediumShip.hit(0);
