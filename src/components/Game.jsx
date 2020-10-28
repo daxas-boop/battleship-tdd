@@ -1,9 +1,8 @@
-import React,{useState, useEffect} from 'react';
+import React,{useState} from 'react';
 import Gameboard from './Gameboard';
-import GamboardFactory from '../factories/Gameboard';
-import humanPlayer from '../factories/Player';
-import AIPlayer from '../factories/AI';
 import styled from '@emotion/styled';
+import useGameLoop from './customHooks/useGameLoop';
+import uniqid from 'uniqid';
 
 const Container = styled.section `
     margin-top: 100px;
@@ -12,27 +11,47 @@ const Container = styled.section `
     height: 500px;
 `
 
-const Game = () => {
-    const [players, setPlayers] = useState([]);
+const Player = styled.h2 `
+    text-align:center;
+`
 
-    useEffect(() => {
-        setPlayers(
-            {
-            human: humanPlayer('pepe', GamboardFactory()),
-            AI: AIPlayer(GamboardFactory())
-            }
-        )
-    }, [])
+const StartGameBtn = styled.button `
+
+`
+
+const StateTurn = styled.h3 `
+
+`
+
+const GameContainer = styled.div `
+    display:grid;
+    grid-template-rows:1fr 5fr;
+`
+
+const Game = () => {
+    const [startGame, setStartGame] = useState(false);
+    const {cellOnClick, playerTurn, players} = useGameLoop(startGame);
 
     return (
-        <Container>
-            {Object.entries(players).map(([key,value]) => 
-                <Gameboard 
-                    key={key}
-                    gameboard = {value.getGameboard()}
-                ></Gameboard>
-            )}
-        </Container>
+        <>
+            <StartGameBtn
+            onClick={ () => setStartGame(true)}
+            >STAR GAME</StartGameBtn>
+            <StateTurn>{playerTurn}</StateTurn>
+            <Container>
+                {Object.entries(players).map(([key,player]) =>
+                    <GameContainer key={uniqid()}>
+                        <Player key={uniqid()}>{player.getName()}</Player>
+                        <Gameboard
+                            player={player.getName()}
+                            cellOnClick= {cellOnClick}
+                            key={uniqid()}
+                            gameboard = {player.getGameboard()}
+                        ></Gameboard>
+                    </GameContainer>
+                )}
+            </Container>
+        </>
     )
 }
 
