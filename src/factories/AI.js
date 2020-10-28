@@ -1,27 +1,24 @@
 const AIPlayer = (gameboard) => {
     let turn = false;
-    
-    const alreadyAttacked = [];
-    
-    const changeTurn = () => {
-        turn= !turn
-    }
 
-    const randomAttack = () => {
-        const randomColumn = Math.floor(Math.random()*10);
-        const randomRow = Math.floor(Math.random()*10);
-        if (alreadyAttacked.includes([randomColumn,randomRow])){
-            randomAttack();
-        } else {
-            alreadyAttacked.push([randomColumn, randomRow]);
+    const coordinates = [];
+    for(let a=0; a<10;a++){
+        for(let i=0; i<10;i++){
+            coordinates.push([a,i])
         }
-        return [randomColumn, randomRow]
+    }
+    
+    const randomAttack = () => {
+        const randomIndex = Math.floor(Math.random() * coordinates.length);
+        const randomCoordinate = coordinates[randomIndex];
+        coordinates.splice(randomIndex,1)
+        return [randomCoordinate[0], randomCoordinate[1]]
     }
 
-    const getTurn = () => turn;
     const getGameboard = () => gameboard;
+    const getName = () => 'Beep-boop i\'m a robot'
 
-    return {randomAttack, getTurn, changeTurn, getGameboard}
+    return {randomAttack, turn, getGameboard, getName}
 }
 
 export default AIPlayer;

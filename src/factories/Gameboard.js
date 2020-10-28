@@ -1,13 +1,5 @@
 import shipFactory from './Ship';
 
-const fleet = [
-   shipFactory(5),
-   shipFactory(4),
-   shipFactory(3),
-   shipFactory(2),
-   shipFactory(1)
-]
-
 const Gameboard = () => {
     const coordinates = [
         [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
@@ -20,6 +12,14 @@ const Gameboard = () => {
         [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
         [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
         [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+    ];
+
+    const fleet = [
+        shipFactory(5),
+        shipFactory(4),
+        shipFactory(3),
+        shipFactory(2),
+        shipFactory(1)
     ]
 
     const placeShipsRandomly = () => {
@@ -48,11 +48,11 @@ const Gameboard = () => {
     }
     placeShipsRandomly();
 
-    const calculateShipPosition = (cor1, cor2) => {
+    const calculateShipPosition = (row, col) => {
         let rightPos=0;
-        const ship = coordinates[cor1][cor2];
+        const ship = coordinates[row][col];
         for(let i=1; i<ship.length+1; i++) {
-            if(ship === coordinates[cor1][cor2+i] || coordinates[cor1][cor2+i] === 'sunked ship' ){
+            if(ship === coordinates[row][col+i] || coordinates[row][col+i] === 'sunked ship'){
                 rightPos++;
             }
         }

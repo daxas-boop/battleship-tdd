@@ -22,14 +22,5 @@ test('AI randomAttack doesnt attack the same place twice', () => {
 
 test('AI turn starts by default on false', () => {
     const newAI = AI();
-    expect(newAI.getTurn()).toBe(false)
-})
-
-test('AI changes turn', () => {
-    const newAI = AI();
-    expect(newAI.getTurn()).toBe(false);
-    newAI.changeTurn();
-    expect(newAI.getTurn()).toBe(true);
-    newAI.changeTurn();
-    expect(newAI.getTurn()).toBe(false);
+    expect(newAI.turn).toBe(false)
 })
