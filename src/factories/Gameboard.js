@@ -28,17 +28,41 @@ const Gameboard = () => {
             let randomRow = Math.floor(Math.random() * 10);
 
             const checkIfEmpty = () => {
-                for (let i=1; i<ship.length+2; i++) {
-                    if (coordinates[randomRow][randomColumn] !== 0 ||
-                    coordinates[randomRow][randomColumn+i] !== 0 ||
-                    coordinates[randomRow][randomColumn-1] !== 0) { //checks if there is a ship behind or in front of it
-                        randomColumn = Math.floor(Math.random() * (10-ship.length+1));
-                        randomRow = Math.floor(Math.random() * 10);
-                        checkIfEmpty()
+                for (let i=0; i<=ship.length+1; i++) {
+                    if(randomRow === 0) {
+                        if(coordinates[randomRow+1][randomColumn+i] !==0||
+                        coordinates[randomRow][randomColumn] !==0 ||
+                        coordinates[randomRow][randomColumn+i] !==0 ||
+                        coordinates[randomRow][randomColumn-1] !==0 ){
+                            randomColumn = Math.floor(Math.random() * (10-ship.length+1));
+                            randomRow = Math.floor(Math.random() * 10);
+                            checkIfEmpty();
+                        }
+                    }
+                    else if(randomRow === 9) {
+                        if(coordinates[randomRow-1][randomColumn+i] !== 0 ||
+                        coordinates[randomRow][randomColumn] !==0 ||
+                        coordinates[randomRow][randomColumn+i] !==0 ||
+                        coordinates[randomRow][randomColumn-1] !==0 ){
+                            randomColumn = Math.floor(Math.random() * (10-ship.length+1));
+                            randomRow = Math.floor(Math.random() * 10);
+                            checkIfEmpty();
+                        }
+                    }
+                    else {
+                        if(coordinates[randomRow][randomColumn] !==0 ||
+                        coordinates[randomRow][randomColumn+i] !==0 ||
+                        coordinates[randomRow][randomColumn-1] !==0 ||
+                        coordinates[randomRow+1][randomColumn+i] !==0 ||
+                        coordinates[randomRow-1][randomColumn+i] !==0 ){ 
+                            randomColumn = Math.floor(Math.random() * (10-ship.length+1));
+                            randomRow = Math.floor(Math.random() * 10);
+                            checkIfEmpty();
+                        }
                     }
                 }
             }
-            checkIfEmpty();
+            checkIfEmpty(); //checks if there is a ship behind or in front of it
 
             for(let i=0; i < ship.length; i++){
                 coordinates[randomRow].splice(randomColumn, 1, ship)
