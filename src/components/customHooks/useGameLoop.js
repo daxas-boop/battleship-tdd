@@ -16,7 +16,7 @@ const useGameLoop = (startGame) => {
     );
     
     useEffect(() => {
-        setGameStatus(startGame ? 'started' : 'not started')
+        setGameStatus(startGame && winner ? 'ended' : startGame ? 'started' : 'not started');
         switch (gameStatus) {
             case 'started':
                 players.human.turn ? setPlayerTurn(`${players.human.getName()} turn.`) : setPlayerTurn(`${players.AI.getName()} turn.`);
@@ -51,34 +51,33 @@ const useGameLoop = (startGame) => {
     const checkWinner = () => {
         if (players.human.getGameboard().allShipsSunk()){
             setGameStatus('ended');
-            console.log('AI WON')
             setWinner(players.AI.getName());
         } else if (players.AI.getGameboard().allShipsSunk()){
             setGameStatus('ended');
-            console.log('HUMAN WON')
             setWinner(players.human.getName());
         }
     }
 
     const AIPlay = () => {
+        if(gameStatus === 'not started' || gameStatus === 'ended') return
         setTimeout(() => {
             const randomCoords = players.AI.randomAttack();
             const enemyGameboard = players.human.getGameboard();
             enemyGameboard.receiveAttack(randomCoords[0], randomCoords[1]);
-            checkWinner()
+            checkWinner();
             changePlayersTurn();
-        }, 500);
+        }, 300);
     }
 
     const cellOnClick = (e) => {
-        if(!startGame) return
+        if(gameStatus === 'not started' || gameStatus === 'ended') return
         if(e.target.dataset.player === players.human.getName()){
-            console.log('Click on the enemy gameboard BITCH!')
+            console.error('Click on the enemy gameboard')
             return
         }
         const enemyGameboard = players.AI.getGameboard();
         enemyGameboard.receiveAttack(Number(e.target.dataset.cord1), Number(e.target.dataset.cord2));
-        checkWinner()
+        checkWinner();
         changePlayersTurn();
         AIPlay();
     }
