@@ -53,8 +53,12 @@ const Gameboard = (props) => {
                             >
                             </Cell>
                         : element === 'x' ? 
-                        <MissedShot></MissedShot> :
-                        <HitShip></HitShip>
+                        <MissedShot
+                            key={uniqid()}
+                        ></MissedShot> :
+                        <HitShip
+                            key={uniqid()}
+                        ></HitShip>
                         )
                     }
                 </Row>
