@@ -73,17 +73,27 @@ const Gameboard = () => {
     const calculateShipPosition = (col, row) => {
         const ship = board[col][row];
         let i = 0;
-        while(board[col][row+i] === ship || board[col][row+i] === 'sunked ship'){
-            i++;
-        }
-
         let b = 0;
-        while(board[col+b][row] === ship || board[col+b][row] === 'sunked ship'){
-            b++;
+        if (col === 9) {
+            while(board[col][row+i] === ship || board[col][row+i] === 'sunked ship') i++;
+        } else {
+            while(board[col][row+i] === ship || board[col][row+i] === 'sunked ship'){
+                i++;
+            }
+    
+            while(board[col+b][row] === ship || board[col+b][row] === 'sunked ship'){
+                b++;
+            }
         }
-        if(i > 1) {return ship.length - i}
-        else if(b > 1) {return ship.length - b}
-        else{return ship.length - i}
+        if(i > 1) {
+            return ship.length - i
+        }
+        else if(b > 1) {
+            return ship.length - b
+        }
+        else{
+            return ship.length - i
+        }
     }
 
     const receiveAttack = (column, row) => {
