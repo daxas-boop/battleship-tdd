@@ -10,7 +10,7 @@ const useGameLoop = (startGame) => {
     const [winner, setWinner] = useState();
     const [players, setPlayers] = useState(
         {
-            human: humanPlayer('pepe', GamboardFactory()),
+            human: humanPlayer('Human', GamboardFactory()),
             AI: AIPlayer(GamboardFactory())
         }
     );
@@ -19,7 +19,10 @@ const useGameLoop = (startGame) => {
         setGameStatus(startGame && winner ? 'ended' : startGame ? 'started' : 'not started');
         switch (gameStatus) {
             case 'started':
-                players.human.turn ? setPlayerTurn(`${players.human.getName()} turn.`) : setPlayerTurn(`${players.AI.getName()} turn.`);
+                console.log(players.human.getGameboard().getBoard())
+                console.log(players.AI.getGameboard().getBoard())
+                players.human.turn ? setPlayerTurn(`${players.human.getName()} turn.`) 
+                : setPlayerTurn(`${players.AI.getName()} turn.`);
             break;
 
             case 'not started':
@@ -65,6 +68,11 @@ const useGameLoop = (startGame) => {
             const enemyGameboard = players.human.getGameboard();
             enemyGameboard.receiveAttack(randomCoords[0], randomCoords[1]);
             checkWinner();
+            if(enemyGameboard.getBoard()[randomCoords[0]][randomCoords[1]] === 'sunked ship'){
+                setPlayers(prevState => ({...prevState}))
+                setTimeout(() => {AIPlay()},300);
+                return;
+            }
             changePlayersTurn();
         }, 300);
     }
@@ -73,11 +81,17 @@ const useGameLoop = (startGame) => {
         if(gameStatus === 'not started' || gameStatus === 'ended') return
         if(e.target.dataset.player === players.human.getName()){
             console.error('Click on the enemy gameboard')
-            return
+            return;
         }
         const enemyGameboard = players.AI.getGameboard();
-        enemyGameboard.receiveAttack(Number(e.target.dataset.cord1), Number(e.target.dataset.cord2));
+        const column = Number(e.target.dataset.cord1);
+        const row = Number(e.target.dataset.cord2);
+        enemyGameboard.receiveAttack(column, row);
         checkWinner();
+        if(enemyGameboard.getBoard()[column][row] === 'sunked ship'){
+            setPlayers(prevState => ({...prevState}))
+            return;
+        }
         changePlayersTurn();
         AIPlay();
     }
