@@ -29,10 +29,16 @@ const Cell = styled.div `
 
 const MissedShot = styled.div `
     background-color: teal;
+    margin:1px;
 `
 
 const HitShip = styled.div `
-    background-color: 
+    background-color: red;
+    margin:1px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-family:'Roboto';
 `
 
 const Gameboard = (props) => {
@@ -40,13 +46,13 @@ const Gameboard = (props) => {
 
     return(
         <Container>
-            {gameboard.getCoordinates().map(row => 
+            {gameboard.getBoard().map(row => 
                 <Row key={uniqid()}>
                     {row.map((element, i) => 
                         typeof element === 'object' || element === 0 ? 
                             <Cell 
                             key={uniqid()}
-                            data-cord1={gameboard.getCoordinates().indexOf(row)}
+                            data-cord1={gameboard.getBoard().indexOf(row)}
                             data-cord2={i}
                             onClick={(e) => cellOnClick(e)}
                             data-player={props.player}
@@ -58,7 +64,7 @@ const Gameboard = (props) => {
                         ></MissedShot> :
                         <HitShip
                             key={uniqid()}
-                        ></HitShip>
+                        >x</HitShip>
                         )
                     }
                 </Row>
