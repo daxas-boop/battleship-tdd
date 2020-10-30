@@ -1,7 +1,7 @@
 import shipFactory from './Ship';
 
 const Gameboard = () => {
-    const coordinates = [
+    const board = [
         [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
         [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
         [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
@@ -22,74 +22,78 @@ const Gameboard = () => {
         shipFactory(1)
     ]
 
+    const placeShipHorizontally = (coordinates, ship) => {
+        let {row, column} = coordinates;
+        for(let i=0; i < ship.length; i++){
+            board[column].splice(row, 1, ship)
+            row++;
+        }
+    }
+
+    const placeShipVertically = (coordinates, ship) => {
+        let {row, column} = coordinates;
+        for(let i=0; i < ship.length; i++){
+            board[column].splice(row, 1, ship)
+            column++;
+        }
+    }
+
+    const getRandomCoordinates = (ship, vertical) => {
+        if(vertical){
+            const row = Math.floor(Math.random() * 10);
+            const column = Math.floor(Math.random() * (10-ship.length));
+            return {row, column}
+        } else {
+            const row = Math.floor(Math.random() * (10-ship.length+1));
+            const column = Math.floor(Math.random() * 10);
+            return {row, column}
+        }
+    }
+
     const placeShipsRandomly = () => {
-       fleet.forEach(ship => {
-            let randomColumn = Math.floor(Math.random() * (10-ship.length+1));
-            let randomRow = Math.floor(Math.random() * 10);
-
-            const checkIfEmpty = () => {
-                for (let i=0; i<=ship.length+1; i++) {
-                    if(randomRow === 0) {
-                        if(coordinates[randomRow+1][randomColumn+i] !==0||
-                        coordinates[randomRow][randomColumn] !==0 ||
-                        coordinates[randomRow][randomColumn+i] !==0 ||
-                        coordinates[randomRow][randomColumn-1] !==0 ){
-                            randomColumn = Math.floor(Math.random() * (10-ship.length+1));
-                            randomRow = Math.floor(Math.random() * 10);
-                            checkIfEmpty();
-                        }
-                    }
-                    else if(randomRow === 9) {
-                        if(coordinates[randomRow-1][randomColumn+i] !== 0 ||
-                        coordinates[randomRow][randomColumn] !==0 ||
-                        coordinates[randomRow][randomColumn+i] !==0 ||
-                        coordinates[randomRow][randomColumn-1] !==0 ){
-                            randomColumn = Math.floor(Math.random() * (10-ship.length+1));
-                            randomRow = Math.floor(Math.random() * 10);
-                            checkIfEmpty();
-                        }
-                    }
-                    else {
-                        if(coordinates[randomRow][randomColumn] !==0 ||
-                        coordinates[randomRow][randomColumn+i] !==0 ||
-                        coordinates[randomRow][randomColumn-1] !==0 ||
-                        coordinates[randomRow+1][randomColumn+i] !==0 ||
-                        coordinates[randomRow-1][randomColumn+i] !==0 ){ 
-                            randomColumn = Math.floor(Math.random() * (10-ship.length+1));
-                            randomRow = Math.floor(Math.random() * 10);
-                            checkIfEmpty();
-                        }
-                    }
+        fleet.forEach(ship => {
+            const vertical = Math.random() > 0.5;
+            if(vertical){
+                let coordinates = getRandomCoordinates(ship, vertical);
+                while(!validVerticalCoordinates(board, coordinates, ship)){
+                    coordinates = getRandomCoordinates(ship, vertical);
                 }
-            }
-            checkIfEmpty(); //checks if there is a ship behind or in front of it
-
-            for(let i=0; i < ship.length; i++){
-                coordinates[randomRow].splice(randomColumn, 1, ship)
-                randomColumn++;
+                placeShipVertically(coordinates, ship);
+            } else {
+                let coordinates = getRandomCoordinates(ship);
+                while(!validHorizontalCoordinates(board, coordinates, ship)){
+                    coordinates = getRandomCoordinates(ship);
+                }
+                placeShipHorizontally(coordinates, ship);
             }
         })
     }
     placeShipsRandomly();
 
-    const calculateShipPosition = (row, col) => {
-        let rightPos=0;
-        const ship = coordinates[row][col];
-        for(let i=1; i<ship.length+1; i++) {
-            if(ship === coordinates[row][col+i] || coordinates[row][col+i] === 'sunked ship'){
-                rightPos++;
-            }
+    const calculateShipPosition = (col, row) => {
+        const ship = board[col][row];
+        let i = 0;
+        while(board[col][row+i] === ship || board[col][row+i] === 'sunked ship'){
+            i++;
         }
-        return ship.length - rightPos - 1;
+
+        let b = 0;
+        while(board[col+b][row] === ship || board[col+b][row] === 'sunked ship'){
+            b++;
+        }
+        if(i > 1) {return ship.length - i}
+        else if(b > 1) {return ship.length - b}
+        else{return ship.length - i}
     }
 
-    const receiveAttack = (cor1, cor2) => {
-        if (typeof coordinates[cor1][cor2] === 'object') {
-            const position = calculateShipPosition(cor1, cor2);
-            coordinates[cor1][cor2].hit(position);
-            coordinates[cor1][cor2] = 'sunked ship';
+    const receiveAttack = (column, row) => {
+        if (typeof board[column][row] === 'object') {
+            const position = calculateShipPosition(column, row);
+            console.log(position)
+            board[column][row].hit(position);
+            board[column][row] = 'sunked ship';
         } else {
-            coordinates[cor1][cor2] = 'x'
+            board[column][row] = 'x'
         }
     }
 
@@ -97,9 +101,104 @@ const Gameboard = () => {
         return fleet.every(ship => ship.isSunk());
     }
 
-    const getCoordinates = () => coordinates;
+    const getBoard = () => board;
 
-    return {getCoordinates, receiveAttack, allShipsSunk};
+    return {getBoard, receiveAttack, allShipsSunk};
 }
 
 export default Gameboard;
+
+const validVerticalCoordinates = (board,coordinates,ship) => {
+    let {row,column} = coordinates;
+
+    for (let i=0; i<=ship.length; i++) {
+        if(column === 0) {
+            //checks the sides
+            if(typeof board[column+i][row-1] === 'object' || typeof board[column+i][row+1] === 'object'){ 
+                return false
+            }
+
+            //checks down
+            if(typeof board[column+i][row] === 'object'){
+                return false
+            }
+        }
+        else if(column === 9) {
+            //checks the sides
+            if(typeof board[column-1][row+1] === 'object' || typeof board[column-1][row-1] === 'object'){ 
+                return false
+            }
+
+            //checks up
+            if(typeof board[column-1][row] === 'object'){
+                return false
+            }
+        }
+        else {
+            //checks the sides
+            if(typeof(board[column+i][row-1]) === 'object' || typeof(board[column+i][row+1]) === 'object'){ 
+                return false
+            }
+    
+            //checks down
+            if(typeof board[column+i][row] === 'object'){
+                return false
+            }
+    
+            //checks up
+            if(typeof board[column-1][row-1] === 'object' || typeof board[column-1][row+1] === 'object' 
+            || typeof board[column-1][row] === 'object'){
+                return false
+            }
+        }
+    }
+
+    return true;
+}
+
+const validHorizontalCoordinates = (board,coordinates,ship) => {
+    let {row,column} = coordinates;
+
+    for (let i=0; i<=ship.length; i++) {
+        if(column === 0) {
+            //checks the sides
+            if(typeof board[column][row+i] === 'object' || typeof board[column][row-1] === 'object'){ 
+                return false
+            }
+
+            //checks down
+            if(typeof board[column+1][row+i] === 'object'|| typeof board[column+1][row-1] === 'object'){
+                return false
+            }
+        }
+        else if(column === 9) {
+            //checks the sides
+            if(typeof board[column][row+i] === 'object' || typeof board[column][row-1] === 'object'){ 
+                return false
+            }
+
+            //checks up
+            if(typeof board[column-1][row+i] === 'object' || typeof board[column-1][row-1] === 'object'){
+                return false
+            }
+        }
+        else {
+            //checks the sides
+            if(typeof(board[column][row+i]) === 'object' || typeof(board[column][row-1]) === 'object'){ 
+                return false
+            }
+    
+            //checks down
+            if(typeof board[column+1][row+i] === 'object' || typeof board[column+1][row-1] === 'object'){
+                return false
+            }
+    
+            //checks up
+            if(typeof board[column-1][row+i] === 'object' || typeof board[column-1][row-1] === 'object'){
+                return false
+            }
+        }
+    }
+
+    return true;
+}
