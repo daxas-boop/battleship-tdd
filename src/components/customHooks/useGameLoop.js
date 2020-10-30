@@ -19,8 +19,6 @@ const useGameLoop = (startGame) => {
         setGameStatus(startGame && winner ? 'ended' : startGame ? 'started' : 'not started');
         switch (gameStatus) {
             case 'started':
-                console.log(players.human.getGameboard().getBoard())
-                console.log(players.AI.getGameboard().getBoard())
                 players.human.turn ? setPlayerTurn(`${players.human.getName()} turn.`) 
                 : setPlayerTurn(`${players.AI.getName()} turn.`);
             break;
