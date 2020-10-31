@@ -1,6 +1,6 @@
-const PlayerHuman = (name, gameboard) => {
+const PlayerHuman = (gameboard) => {
     let turn = true;
-    const getName = () => name;
+    const getName = () => 'HUMAN';
     const getGameboard = () => gameboard;
 
     return {getName, turn, getGameboard}

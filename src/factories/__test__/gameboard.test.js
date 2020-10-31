@@ -3,7 +3,7 @@ import Gameboard from '../Gameboard';
 test('returns a gameboard with 10 length array', () => {
     const GAMEBOARD_LENGTH = 10;
     const newGameboard = Gameboard();
-    expect(newGameboard.getCoordinates().length).toBe(GAMEBOARD_LENGTH);
+    expect(newGameboard.getBoard().length).toBe(GAMEBOARD_LENGTH);
 })
 
 test('places all the 15 ships on the gameboard', () => {
@@ -11,7 +11,7 @@ test('places all the 15 ships on the gameboard', () => {
     const newGameboard = Gameboard();
 
     let shipsOnGameboard = 0;
-    newGameboard.getCoordinates().forEach(array => {
+    newGameboard.getBoard().forEach(array => {
         const numberOfShips = array.filter(value => typeof value === 'object')
         shipsOnGameboard += numberOfShips.length;
     });
@@ -20,9 +20,9 @@ test('places all the 15 ships on the gameboard', () => {
 
 test('receiveAttack attacks a ship or records the missed attack', () => {
     const newGameboard = Gameboard();
-    expect(newGameboard.getCoordinates()[1][2] === 0 || typeof newGameboard.getCoordinates()[1][2] === 'object').toBeTruthy()
+    expect(newGameboard.getBoard()[1][2] === 0 || typeof newGameboard.getBoard()[1][2] === 'object').toBeTruthy()
     newGameboard.receiveAttack(1,2)
-    expect(newGameboard.getCoordinates()[1][2] === 'x' || newGameboard.getCoordinates()[1][2] === 'sunked ship').toBeTruthy()
+    expect(newGameboard.getBoard()[1][2] === 'x' || newGameboard.getBoard()[1][2] === 'sunked ship').toBeTruthy()
 })
 
 test('allShipsSunk detects when all ship got sinked', () => {
