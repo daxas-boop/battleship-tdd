@@ -99,7 +99,6 @@ const Gameboard = () => {
     const receiveAttack = (column, row) => {
         if (typeof board[column][row] === 'object') {
             const position = calculateShipPosition(column, row);
-            console.log(position)
             board[column][row].hit(position);
             board[column][row] = 'sunked ship';
         } else {
@@ -111,9 +110,17 @@ const Gameboard = () => {
         return fleet.every(ship => ship.isSunk());
     }
 
+    const getShipsRemaining = () => {
+        let acc = 0;
+        fleet.forEach( (ship) => {
+            if(!ship.isSunk()) acc++;
+        })
+        return acc;
+    }
+
     const getBoard = () => board;
 
-    return {getBoard, receiveAttack, allShipsSunk};
+    return {getBoard, receiveAttack, allShipsSunk, getShipsRemaining};
 }
 
 export default Gameboard;
