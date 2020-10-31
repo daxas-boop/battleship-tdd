@@ -16,7 +16,7 @@ const AIPlayer = (gameboard) => {
     }
 
     const getGameboard = () => gameboard;
-    const getName = () => 'Beep-boop i\'m a robot'
+    const getName = () => 'AI'
 
     return {randomAttack, turn, getGameboard, getName}
 }
