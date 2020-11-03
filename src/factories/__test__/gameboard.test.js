@@ -35,3 +35,14 @@ test('allShipsSunk detects when all ship got sinked', () => {
     }
     expect(newGameboard.allShipsSunk()).toBe(true);
 })
+
+test('Places the ships on random coordinates without touching each other', () => {
+    const newGameboard = Gameboard();
+    newGameboard.getBoard();
+
+    // if typeof element === object {
+    //  [col+1][col-1][row+1][row-1] === element
+    //  return false
+    // }
+    // return true
+})
