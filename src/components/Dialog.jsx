@@ -13,9 +13,9 @@ const IconLink = styled.a `
 
 const Dialog = () => {
     return(
-            <DialogContainer class="message -left">
-                <i class="nes-bcrikko" style={{alignSelf: 'flex-end'}}></i>
-                <section class="nes-balloon from-left is-dark" style={{width:'75%', marginLeft:30}} >
+            <DialogContainer className="message -left">
+                <i className="nes-bcrikko" style={{alignSelf: 'flex-end'}}></i>
+                <section className="nes-balloon from-left is-dark" style={{width:'75%', marginLeft:30}} >
                     <p>This game was created by daxas-boop.</p>
                     <IconLink href='https://github.com/daxas-boop/' target='_blank' rel="noopener noreferrer">
                         <i className='nes-icon github nes-pointer is-medium'></i>
