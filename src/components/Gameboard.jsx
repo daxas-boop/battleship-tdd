@@ -1,14 +1,8 @@
-import React,{useState, useEffect} from 'react'
+import React from 'react';
 import uniqid from 'uniqid';
 import styled from '@emotion/styled';
 import "nes.css/css/nes.min.css";
 
-const Container = styled.div `
-    display:grid;
-    grid-template-columns: 1fr 1fr;
-    height: 500px;
-    margin-top:20px;
-`
 const Board = styled.div `
     display:grid;
     grid-template-rows: repeat(11, 1fr);
@@ -17,11 +11,48 @@ const Board = styled.div `
     width:500px;
     height:500px;
     margin:0 auto;
+    line-height:0;
+
+    @media(max-width:1366px) {
+        width:400px;
+        height:400px;
+    }
+
+    @media(max-width:1024px) {
+        width: 300px;
+        height: 300px;
+    }
+
+    @media(max-width:768px) {
+        width: 250px;
+        height: 250px;
+    }
+
+    @media(max-width:320px) {
+        width: 200px;
+        height: 200px;
+    }
 `
 
 const Wrapper = styled.section `
-    border: 4px solid black;
+    border: 4px solid #002c66;
     margin:10px;
+
+    @media(max-width:1366px) {
+        margin:10px 20px; 
+    }
+
+    @media(max-width:1024px) {
+        margin:0;
+    }
+
+    @media(max-width:768px) {
+        margin:0;
+    }
+
+    @media(max-width:320px) {
+        margin:0;
+    }
 `
 
 const Row = styled.div `
@@ -32,18 +63,34 @@ const Row = styled.div `
 
 const Cell = styled.div `
     display:flex;
-    margin:1px;
-    background-color:grey;
+    border:1px solid #002c66;
+    background-color: #2389da;
+    &:hover{
+        background-color: purple;
+    }
+`
+
+const CellNoHover = styled.div `
+    display:flex;
+    border:1px solid #002c66;
+    background-color: #2389da;
 `
 
 const MissedShot = styled.div `
-    background-color: teal;
-    margin:1px;
+    background-color: #2389da;
+    border:1px solid #002c66;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+
+    @media(max-width:768px) {
+        font-size: 14px;
+    }
 `
 
 const HitShip = styled.div `
     background-color: red;
-    margin:1px;
+    border:1px solid #002c66;
     display:flex;
     align-items:center;
     justify-content:center;
@@ -51,7 +98,7 @@ const HitShip = styled.div `
 `
 
 const Ship = styled.div `
-    margin:1px;
+    border:1px solid #002c66;
     background-color:blue;
 `
 
@@ -59,10 +106,15 @@ const Title = styled.h3 `
     text-align:center;
     margin-top:20px;
     margin-bottom:20px;
+
+    @media(max-width:768px) {
+        font-size: 14px;
+        margin:4px 0;
+    }
 `
 
 const Coordinates = styled.div `
-    background-color:white;
+    background-color:#eee;
     display:flex;
     align-items:center;
     justify-content:center;
@@ -71,39 +123,21 @@ const Coordinates = styled.div `
 const Lives = styled.p `
     margin-top:10px;
     text-align:center;
+
+    @media(max-width:768px) {
+        font-size:14px;
+        margin:25px 0;
+    }
 `
+
 
 const Gameboards = (props) => {
     const {humanGameboard, AIGameboard, cellOnClick, shipsRemaining} = props;
-    const [humanLives, setHumanLives] = useState(Array(shipsRemaining.humanShips).fill(1));
-    const [AILives, setAILives] = useState(Array(shipsRemaining.AIShips).fill(1));
-
-    useEffect(() => {
-        const STARTING_LIVES = 5;
-
-        const newAILives = AILives;
-        const AIlostLives =  STARTING_LIVES - shipsRemaining.AIShips;
-        if(AIlostLives) {
-            for(let i=0; i<AIlostLives;i++){
-                newAILives.splice(STARTING_LIVES-AIlostLives,1,0)
-            }
-        }
-        setAILives(newAILives);
-
-        const newHumanLives = humanLives;
-        const humanLostLives =  STARTING_LIVES - shipsRemaining.humanShips;
-        if(humanLostLives) {
-            for(let i=0; i<humanLostLives;i++){
-                newHumanLives.splice(STARTING_LIVES - humanLostLives,1,0)
-            }
-        }
-        setHumanLives(newHumanLives);
-    }, [AILives, shipsRemaining, humanLives])
 
     return(
-        <Container>
+        <>
             <Wrapper>
-                <Title>Your board</Title>
+                <Title style={{color:'green'}}>Your board</Title>
                 <Board>
                     {humanGameboard.getBoard().map((row,i)=>
                     <React.Fragment key={uniqid()}>
@@ -112,32 +146,24 @@ const Gameboards = (props) => {
                                 typeof element === 'object' ?
                                 <Ship key={uniqid()}> </Ship> 
                                 : element === 0 ?
-                                    <Cell key={uniqid()} />
+                                    <CellNoHover key={uniqid()} />
                                 : element === 'x' ? 
-                                    <MissedShot key={uniqid()} /> 
+                                    <MissedShot key={uniqid()}>×</MissedShot>
                                 : element === 'sunked ship' &&
-                                    <HitShip key={uniqid()} />
+                                    <HitShip key={uniqid()} >!</HitShip>
                                 )
                             }
-                            <Coordinates key={uniqid()}>{i}</Coordinates>
+                            <Coordinates key={uniqid()}>{String.fromCharCode(65+i)}</Coordinates>
                         </Row>
                             <Coordinates key={uniqid()}>{i}</Coordinates>
                     </React.Fragment>
                     )}
                 </Board>
                 <Lives>Your ships alive: {shipsRemaining.humanShips}</Lives>
-                <section className="icon-list" style={{display:'flex', justifyContent:'center'}}>
-                    {humanLives.map(e => 
-                        e === 1 ? 
-                        <i key={uniqid()} className="nes-icon is-large heart"></i> 
-                        : e === 0 &&
-                        <i key={uniqid()} className="nes-icon is-large heart is-empty"></i>
-                    )}
-                </section>
             </Wrapper>    
 
             <Wrapper>
-                <Title>Enemy board</Title>
+                <Title style={{color:'red'}}>Enemy board</Title>
                 <Board>
                     {AIGameboard.getBoard().map((row,i) => 
                     <React.Fragment key={uniqid()}>
@@ -153,28 +179,19 @@ const Gameboards = (props) => {
                                     data-player={props.player} 
                                     />
                                 : cell === 'x' ? 
-                                    <MissedShot key={uniqid()} /> 
+                                    <MissedShot key={uniqid()}>×</MissedShot> 
                                 : cell === 'sunked ship' &&
-                                    <HitShip key={uniqid()} />
+                                    <HitShip key={uniqid()} >!</HitShip>
                             )}
-                            <Coordinates key={uniqid()}>{i}</Coordinates>
+                            <Coordinates key={uniqid()}>{String.fromCharCode(65+i)}</Coordinates>
                         </Row>
                         <Coordinates key={uniqid()}>{i}</Coordinates>
                     </React.Fragment>
                     )}
                 </Board>
                 <Lives>Enemy ships alive: {shipsRemaining.AIShips}</Lives>
-                <section className="icon-list" style={{display:'flex', justifyContent:'center'}}> 
-                    {AILives.map(e => 
-                        e === 1 ? 
-                        <i key={uniqid()} className="nes-icon is-large heart"></i> 
-                        : e === 0 &&
-                        <i key={uniqid()} className="nes-icon is-large heart is-empty"></i>
-                    )}
-                </section>
             </Wrapper>
-
-        </Container>
+        </>
     )
 }
 
