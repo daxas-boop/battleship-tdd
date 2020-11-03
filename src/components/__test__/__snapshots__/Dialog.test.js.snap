@@ -1,0 +1,39 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`renders correctly 1`] = `
+<section
+  className="message -left css-x0ow50"
+>
+  <i
+    className="nes-bcrikko"
+    style={
+      Object {
+        "alignSelf": "flex-end",
+      }
+    }
+  />
+  <section
+    className="nes-balloon from-left is-dark"
+    style={
+      Object {
+        "marginLeft": 30,
+        "width": "75%",
+      }
+    }
+  >
+    <p>
+      This game was created by daxas-boop.
+    </p>
+    <a
+      className="css-1hfqtwh"
+      href="https://github.com/daxas-boop/"
+      rel="noopener noreferrer"
+      target="_blank"
+    >
+      <i
+        className="nes-icon github nes-pointer is-medium"
+      />
+    </a>
+  </section>
+</section>
+`;
