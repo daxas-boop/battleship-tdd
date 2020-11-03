@@ -1,52 +1,32 @@
-import {useState,useEffect} from 'react';
-import GamboardFactory from '../../factories/Gameboard';
+import {useState, useEffect} from 'react';
+import newGameboard from '../../factories/Gameboard';
 import humanPlayer from '../../factories/Player';
 import AIPlayer from '../../factories/AI';
 
 
-const useGameLoop = (startGame) => {
-    const [gameStatus, setGameStatus] = useState();
-    const [playerTurn, setPlayerTurn] = useState();
+const useGameLoop = () => {
     const [winner, setWinner] = useState();
-    const [players, setPlayers] = useState(
-        {
-            human: humanPlayer(GamboardFactory()),
-            AI: AIPlayer(GamboardFactory())
-        }
-    );
-    const [remainingShips, setRemainingShips] = useState({
-        humanShips: players.human.getGameboard().getShipsRemaining(),
-        AIShips: players.AI.getGameboard().getShipsRemaining()
-    })
-
-    const startNewGame = () => {
-        setPlayers({
-            human: humanPlayer(GamboardFactory()),
-            AI: AIPlayer(GamboardFactory())
-        })
-        setWinner()
-    }
+    const [remainingShips, setRemainingShips] = useState();
+    const [players, setPlayers] = useState({
+        human: humanPlayer(newGameboard()),
+        AI: AIPlayer(newGameboard())
+    });
     
     useEffect(() => {
-        setGameStatus(startGame && winner ? 'ended' : startGame ? 'started' : 'not started');
-        switch (gameStatus) {
-            case 'started':
-                players.human.turn ? setPlayerTurn(`Your turn.`) 
-                : setPlayerTurn(`Computer's turn.`);
-            break;
+        players && setRemainingShips({
+            humanShips: players.human.getGameboard().getShipsRemaining(),
+            AIShips: players.AI.getGameboard().getShipsRemaining()
+        })
+    }, [players])
 
-            case 'not started':
-                setPlayerTurn('Click on START GAME to start the game')
-            break;
-
-            case 'ended':
-                setPlayerTurn(`${winner} won the game.`)
-            break;
-        
-            default:
-                break;
+    const startNewGame = () => {
+        const newPlayers = {
+            human: humanPlayer(newGameboard()),
+            AI: AIPlayer(newGameboard())
         }
-    }, [gameStatus, players, startGame, winner])
+        setPlayers(newPlayers);
+        setWinner();
+    }
 
     const changePlayersTurn = () => {
         setPlayers(prevState => ({
@@ -63,32 +43,21 @@ const useGameLoop = (startGame) => {
 
     const checkWinner = () => {
         if (players.human.getGameboard().allShipsSunk()){
-            setGameStatus('ended');
             setWinner(players.AI.getName());
         } else if (players.AI.getGameboard().allShipsSunk()){
-            setGameStatus('ended');
             setWinner(players.human.getName());
         }
     }
 
-    const getShipsRemaining = () => {
-        setRemainingShips({
-            humanShips: players.human.getGameboard().getShipsRemaining(),
-            AIShips: players.AI.getGameboard().getShipsRemaining()
-        })
-    }
-
     const AIPlay = () => {
-        if(gameStatus === 'not started' || gameStatus === 'ended') return
         setTimeout(() => {
             const randomCoords = players.AI.randomAttack();
             const enemyGameboard = players.human.getGameboard();
             enemyGameboard.receiveAttack(randomCoords[0], randomCoords[1]);
-            getShipsRemaining()
             checkWinner();
             if(enemyGameboard.getBoard()[randomCoords[0]][randomCoords[1]] === 'sunked ship'){
                 setPlayers(prevState => ({...prevState}))
-                setTimeout(() => {AIPlay()},300);
+                setTimeout(() => {AIPlay()}, 300);
                 return;
             }
             changePlayersTurn();
@@ -96,7 +65,6 @@ const useGameLoop = (startGame) => {
     }
 
     const cellOnClick = (e) => {
-        if(gameStatus === 'not started' || gameStatus === 'ended') return
         if(e.target.dataset.player === players.human.getName()){
             console.error('Click on the enemy gameboard')
             return;
@@ -105,7 +73,6 @@ const useGameLoop = (startGame) => {
         const column = Number(e.target.dataset.cord1);
         const row = Number(e.target.dataset.cord2);
         enemyGameboard.receiveAttack(column, row);
-        getShipsRemaining();
         checkWinner();
         if(enemyGameboard.getBoard()[column][row] === 'sunked ship'){
             setPlayers(prevState => ({...prevState}))
@@ -115,7 +82,7 @@ const useGameLoop = (startGame) => {
         AIPlay();
     }
 
-    return {cellOnClick, playerTurn, players, winner, startNewGame, remainingShips}
+    return {cellOnClick, players, winner, startNewGame, remainingShips}
 }
 
 export default useGameLoop;
