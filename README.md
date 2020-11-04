@@ -2,8 +2,9 @@
 
 ## Overview 
 This project was created as part of the curriculum in Javascript Fullstack on The Odin Project.</br>
+
 The hardest project for me till now. At the start seemed to be another easy game but that wasn't goint to be the case. Even though I got a pretty detailed explanation of how to create the starting factories, it was quite tough to get around the logic of placing ships on the gameboard with one space in between and getting the position of where each part of the ship was. But at the end a managed a way to do it, still not sure if it's the best one.</br>
-Testing an coding afterwards was pretty straightforward on vanillaJS. But a little bit harder on components and custom hooks from react sinc it was my first time doing it.
+Testing an coding afterwards was pretty straightforward on vanillaJS. But a little bit harder on components and custom hooks from react since it was my first time doing it.
 
 ## Running the project locally
 1. Clone this project locally.
