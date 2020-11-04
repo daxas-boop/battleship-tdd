@@ -35,3 +35,49 @@ test('allShipsSunk detects when all ship got sinked', () => {
     }
     expect(newGameboard.allShipsSunk()).toBe(true);
 })
+
+test('Places the ships on random coordinates without touching each other', () => {
+    const newGameboard = Gameboard();
+    const board = newGameboard.getBoard();
+    
+    const checkValidity = (object,b,i) => {
+        if (b === 9) {
+            if(typeof board[b-1][i] === 'object' && board[b-1][i] !== object){
+                return false
+            } else if( typeof board[b][i-1] === 'object' && board[b][i-1] !== object) {
+                return false
+            } else if( typeof board[b][i+1] === 'object' && board[b][i+1] !== object) {
+                return false
+            }
+            return true;
+        }else if (b === 0) {
+            if (typeof board[b+1][i] === 'object' && board[b+1][i] !== object) {
+                return false
+            } else if( typeof board[b][i-1] === 'object' && board[b][i-1] !== object) {
+                return false
+            } else if( typeof board[b][i+1] === 'object' && board[b][i+1] !== object) {
+                return false
+            }
+            return true;
+        } else {
+            if(typeof board[b-1][i] === 'object' && board[b-1][i] !== object){
+                return false
+            } else if (typeof board[b+1][i] === 'object' && board[b+1][i] !== object) {
+                return false
+            } else if( typeof board[b][i-1] === 'object' && board[b][i-1] !== object) {
+                return false
+            } else if( typeof board[b][i+1] === 'object' && board[b][i+1] !== object) {
+                return false
+            }
+            return true;
+        }
+    }
+
+    for(let b=0; b<10; b++){
+        for(let i=0; i<10; i++){
+            if(typeof board[b][i] === 'object'){
+                expect(checkValidity(board[b][i],b,i)).toBe(true)
+            }
+        }
+    }
+})

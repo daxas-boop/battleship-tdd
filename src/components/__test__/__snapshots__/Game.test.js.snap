@@ -1,0 +1,30 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`renders correctly 1`] = `
+<div
+  className="nes-container is-rounded css-1dk4e3y"
+>
+  <button
+    className="nes-btn css-1s45q0u"
+    onClick={[Function]}
+  >
+    New game
+  </button>
+  <button
+    className="nes-btn css-1s45q0u"
+    onClick={[Function]}
+  >
+    How to Play
+  </button>
+  <a
+    className="css-1hfqtwh"
+    href="https://github.com/daxas-boop/"
+    rel="noopener noreferrer"
+    target="_blank"
+  >
+    <i
+      className="nes-icon github nes-pointer is-medium"
+    />
+  </a>
+</div>
+`;

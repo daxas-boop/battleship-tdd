@@ -6,32 +6,13 @@ Array [
     className="container css-1wjo8ce"
   >
     <h1
-      className="css-1x37sa6"
+      className="css-v9v1t7"
     >
       Battleship TDD
     </h1>
-    <nav
-      className="css-14eek9t"
-    >
-      <p
-        className="css-ivilhj"
-      >
-        Follow me
-      </p>
-      <a
-        className="css-19fbsuz"
-        href="https://github.com/daxas-boop/"
-        rel="noopener noreferrer"
-        target="_blank"
-      >
-        <i
-          className="nes-icon github nes-pointer"
-        />
-      </a>
-    </nav>
   </header>,
   <div
-    className="nes-container is-rounded css-1h4szzi"
+    className="nes-container is-rounded css-1dk4e3y"
   >
     <button
       className="nes-btn css-1s45q0u"

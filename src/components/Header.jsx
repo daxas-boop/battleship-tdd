@@ -13,33 +13,20 @@ const Title = styled.h1 `
     color: black;
     flex-grow:2;
     text-align:center;
-`
 
-const SocialNav = styled.nav `
-    margin-top:5px;
-    margin-right:5px;
-    display:flex;
-    flex-direction: column;
-`
+    @media(max-width:768px) {
+        font-size:18px;
+    }
 
-const IconLink = styled.a `
-    text-align:center;
-`
-
-const Text = styled.p `
-    margin:0;
+    @media(max-width:320px) {
+        font-size:14px;
+    }
 `
 
 const Header = () => {
     return (
         <Container className='container'>
             <Title>Battleship TDD</Title>
-            <SocialNav>
-                <Text>Follow me</Text>
-                <IconLink href='https://github.com/daxas-boop/' target='_blank' rel="noopener noreferrer">
-                    <i className='nes-icon github nes-pointer'></i>
-                </IconLink>
-            </SocialNav>
         </Container>
     )
 }
