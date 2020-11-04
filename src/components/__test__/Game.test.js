@@ -1,15 +1,14 @@
-import Game from '../Game';
-import renderer from 'react-test-renderer';
 import React from 'react';
+import renderer from 'react-test-renderer';
 import { render, screen, fireEvent } from "@testing-library/react";
 import '@testing-library/jest-dom';
+import Game from '../Game';
 
 test('renders correctly', () => {
-    const component = renderer.create(<Game />);
-    let tree = component.toJSON();
-    expect(tree).toMatchSnapshot();
+  const component = renderer.create(<Game />);
+  let tree = component.toJSON();
+  expect(tree).toMatchSnapshot();
 });
-
 
 test("New Game onClick renders gameboards", () => {
   render(<Game />);
@@ -23,7 +22,7 @@ test("New Game onClick renders gameboards", () => {
   expect(screen.queryByText("Enemy board")).toBeInTheDocument();
 });
 
-test("How to Play onClick renders how to play tab", () => {
+test("How to Play button renders How to play tab", () => {
   render(<Game />);
 
   expect(screen.getByText("How to Play")).toBeInTheDocument();
@@ -31,8 +30,7 @@ test("How to Play onClick renders how to play tab", () => {
   expect(screen.queryByTestId('how-to-play')).toBeInTheDocument();
 });
 
-
-test("How to Play onClick renders how to play tab", () => {
+test("Continue button closes the How to play tab", () => {
   render(<Game />);
 
   fireEvent.click(screen.getByText("How to Play"));
@@ -41,3 +39,7 @@ test("How to Play onClick renders how to play tab", () => {
   fireEvent.click(screen.getByText('Continue'));
   expect(screen.queryByTestId('how-to-play')).toBe(null);
 });
+
+test("WinnerContainers render when we have winner", () => {
+
+})
