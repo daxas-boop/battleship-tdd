@@ -65,6 +65,7 @@ const WinnerContainer = styled.div `
     width:500px;
     border:4px solid white;
     padding:2px;
+    max-width:100vw;
 `
 
 const Title = styled.h4 `
