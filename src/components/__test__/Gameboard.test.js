@@ -24,11 +24,3 @@ test('Cell on click calls cellOnClick', () => {
     fireEvent.click(screen.queryAllByTestId('cell')[0]);
     expect(mockCallback.mock.calls.length).toBe(1);
 })
-
-test('Human gameboard renders correctly.', () => {
-
-})
-
-test('Ai gameboard renders correctly.', () => {
-
-})

@@ -1,6 +1,6 @@
 import React from 'react';
 import renderer from 'react-test-renderer';
-import { render, screen, fireEvent } from "@testing-library/react";
+import { render, screen, fireEvent, act } from "@testing-library/react";
 import '@testing-library/jest-dom';
 import Game from '../Game';
 
@@ -12,18 +12,16 @@ test('renders correctly', () => {
 
 test("New Game onClick renders gameboards", () => {
   render(<Game />);
-
-  expect(screen.getByText("New game")).toBeInTheDocument();
-
+  expect(screen.queryByTestId('human-gameboard')).toBe(null);
+  expect(screen.queryByTestId('ai-gameboard')).toBe(null);
   fireEvent.click(screen.getByText("New game"));
+  expect(screen.queryByTestId('human-gameboard')).toBeInTheDocument();
+  expect(screen.queryByTestId('ai-gameboard')).toBeInTheDocument();
   expect(screen.queryByText("New game")).toBe(null);
-  expect(screen.queryByText("Your turn")).toBeInTheDocument();
-  expect(screen.queryByText("Your board")).toBeInTheDocument();
-  expect(screen.queryByText("Enemy board")).toBeInTheDocument();
 });
 
 test("How to Play button renders How to play tab", () => {
-  render(<Game />);
+render(<Game />);
 
   expect(screen.getByText("How to Play")).toBeInTheDocument();
   fireEvent.click(screen.getByText("How to Play"));
@@ -40,6 +38,39 @@ test("Continue button closes the How to play tab", () => {
   expect(screen.queryByTestId('how-to-play')).toBe(null);
 });
 
-test("WinnerContainers render when we have winner", () => {
+describe('WinnerContainer works properly', () => {
+
+  test("WinnerContainers render when we have winner", () => {
+    render(<Game />);
+    fireEvent.click(screen.getByText("New game"));
+    expect(screen.queryByTestId('winner-container')).toBe(null);
+    jest.useFakeTimers();
+    for(let i=0; i<100 ;i++){ 
+      fireEvent.click(screen.queryAllByTestId('cell')[0])
+      act(() => {
+        jest.advanceTimersByTime(400);
+      })
+    }
+    expect(screen.queryByTestId('winner-container')).toBeInTheDocument();
+  })
+  
+  test("Play Again button starts a new game", () => {
+    render(<Game />);
+    fireEvent.click(screen.getByText("New game"));
+    jest.useFakeTimers();
+    for(let i=0; i<100 ;i++){ 
+      fireEvent.click(screen.queryAllByTestId('cell')[0])
+      act(() => {
+        jest.advanceTimersByTime(400);
+      })
+    }
+
+    expect(screen.queryByText('Play again?')).toBeInTheDocument();
+    fireEvent.click(screen.queryByText('Play again?'));
+    expect(screen.queryByText('Play again?')).toBe(null);
+    expect(screen.queryByTestId('winner-container')).toBe(null);
+    expect(screen.queryByTestId('human-gameboard')).toBeInTheDocument();
+    expect(screen.queryByTestId('ai-gameboard')).toBeInTheDocument();
+  })
 
 })
