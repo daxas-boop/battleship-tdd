@@ -1,4 +1,4 @@
-import React,{useState} from 'react';
+import React,{useState, useEffect} from 'react';
 import Gameboards from './Gameboard';
 import styled from '@emotion/styled';
 import useGameLoop from './customHooks/useGameLoop';
@@ -93,10 +93,15 @@ const Container = styled.div `
 `
 
 const Game = () => {
+    const {cellOnClick, players, winner, startNewGame, remainingShips} = useGameLoop();
     const [renderMenu, setRenderMenu] = useState(true);
     const [renderGameboards, setRenderGameboards]= useState(false);
     const [renderHowtoPlay, setRenderHowToPlay] = useState(false);
-    const {cellOnClick, players, winner, startNewGame, remainingShips} = useGameLoop();
+    const [renderWinner, setRenderWinner] = useState(false);
+
+    useEffect(() => {
+        winner ? setRenderWinner(true) : setRenderWinner(false);
+    }, [winner])
 
     const handleNewGame = () => {
         startNewGame();
@@ -149,7 +154,7 @@ const Game = () => {
                 </Container>
             }
 
-            {winner &&
+            {renderWinner &&
                 <WinnerContainer 
                 data-testid="winner-container"
                 className='nes-dialog is-dark'>
