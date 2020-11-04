@@ -132,25 +132,34 @@ const Lives = styled.p `
 
 
 const Gameboards = (props) => {
-    const {humanGameboard, AIGameboard, cellOnClick, shipsRemaining} = props;
+    const {humanGameboard, aiGameboard, cellOnClick, shipsRemaining} = props;
 
     return(
         <>
             <Wrapper>
                 <Title style={{color:'green'}}>Your board</Title>
-                <Board>
-                    {humanGameboard.getBoard().map((row,i)=>
+                <Board  data-testid='human-gameboard'>
+                    {humanGameboard.map((row,i)=>
                     <React.Fragment key={uniqid()}>
                         <Row key={uniqid()}>
                             {row.map((element, i) => 
                                 typeof element === 'object' ?
-                                <Ship key={uniqid()}> </Ship> 
+                                <Ship data-testid='ship' key={uniqid()}> </Ship> 
                                 : element === 0 ?
-                                    <CellNoHover key={uniqid()} />
+                                    <CellNoHover 
+                                        data-testid='cell-no-hover' 
+                                        key={uniqid()}>
+                                    </CellNoHover>
                                 : element === 'x' ? 
-                                    <MissedShot key={uniqid()}>×</MissedShot>
+                                    <MissedShot 
+                                        data-testid='missed-shot' 
+                                        key={uniqid()}>
+                                    ×</MissedShot>
                                 : element === 'sunked ship' &&
-                                    <HitShip key={uniqid()} >!</HitShip>
+                                    <HitShip 
+                                        data-testid='hit-ship'
+                                        key={uniqid()}>
+                                    !</HitShip>
                                 )
                             }
                             <Coordinates key={uniqid()}>{String.fromCharCode(65+i)}</Coordinates>
@@ -164,24 +173,31 @@ const Gameboards = (props) => {
 
             <Wrapper>
                 <Title style={{color:'red'}}>Enemy board</Title>
-                <Board>
-                    {AIGameboard.getBoard().map((row,i) => 
+                <Board data-testid='ai-gameboard'>
+                    {aiGameboard.map((row,i) => 
                     <React.Fragment key={uniqid()}>
                         <Row key={uniqid()}>
                             {row.map((cell, i) => 
                                 typeof cell === 'object' || cell === 0 ? 
-                                    <Cell
+                                    <Cell 
+                                    data-testid='cell'
                                     className='nes-pointer'
                                     key={uniqid()}
-                                    data-cord1={AIGameboard.getBoard().indexOf(row)}
+                                    data-cord1={aiGameboard.indexOf(row)}
                                     data-cord2={i}
-                                    onClick={(e) => cellOnClick(e)}
+                                    onClick={(e) => cellOnClick(Number(e.target.dataset.cord1),Number(e.target.dataset.cord2))}
                                     data-player={props.player} 
                                     />
                                 : cell === 'x' ? 
-                                    <MissedShot key={uniqid()}>×</MissedShot> 
+                                    <MissedShot 
+                                        data-testid='missed-shot'
+                                        key={uniqid()}>
+                                    ×</MissedShot> 
                                 : cell === 'sunked ship' &&
-                                    <HitShip key={uniqid()} >!</HitShip>
+                                    <HitShip
+                                        data-testid='hit-ship'
+                                        key={uniqid()}>
+                                    !</HitShip>
                             )}
                             <Coordinates key={uniqid()}>{String.fromCharCode(65+i)}</Coordinates>
                         </Row>

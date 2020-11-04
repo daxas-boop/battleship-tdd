@@ -142,15 +142,17 @@ const Game = () => {
                     <StateTurn>{players.human.turn ? 'Your turn' : 'Computer\'s turn.'}</StateTurn>
                     <Gameboards
                         cellOnClick={cellOnClick}
-                        humanGameboard={players.human.getGameboard()}
-                        AIGameboard={players.AI.getGameboard()}
+                        humanGameboard={players.human.getGameboard().getBoard()}
+                        aiGameboard={players.AI.getGameboard().getBoard()}
                         shipsRemaining={remainingShips}
                     />
                 </Container>
             }
 
             {winner &&
-                <WinnerContainer className='nes-dialog is-dark'>
+                <WinnerContainer 
+                data-testid="winner-container"
+                className='nes-dialog is-dark'>
                     <Title>{winner === 'HUMAN' ?  'YOU WON !!' : 'YOU LOST :('}</Title> 
                     <Button 
                         className='nes-btn is-primary' 
