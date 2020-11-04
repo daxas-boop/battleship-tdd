@@ -5,7 +5,7 @@ import AIPlayer from '../../factories/AI';
 
 
 const useGameLoop = () => {
-    const [winner, setWinner] = useState();
+    const [winner, setWinner] = useState(null);
     const [remainingShips, setRemainingShips] = useState();
     const [players, setPlayers] = useState({
         human: humanPlayer(newGameboard()),
@@ -25,7 +25,7 @@ const useGameLoop = () => {
             AI: AIPlayer(newGameboard())
         }
         setPlayers(newPlayers);
-        setWinner();
+        setWinner(null);
     }
 
     const changePlayersTurn = () => {
@@ -49,14 +49,22 @@ const useGameLoop = () => {
         }
     }
 
+    const isShipHit = (enemyGameboard, column, row) => {
+        const enemyBoard = enemyGameboard.getBoard();
+        return (enemyBoard[column][row] === 'sunked ship');
+    } 
+
     const AIPlay = () => {
         setTimeout(() => {
             const randomCoords = players.AI.randomAttack();
+            const column = randomCoords[0];
+            const row = randomCoords[1];
             const enemyGameboard = players.human.getGameboard();
-            enemyGameboard.receiveAttack(randomCoords[0], randomCoords[1]);
-            checkWinner();
-            if(enemyGameboard.getBoard()[randomCoords[0]][randomCoords[1]] === 'sunked ship'){
+
+            enemyGameboard.receiveAttack(column, row);
+            if (isShipHit(enemyGameboard,column,row)) {
                 setPlayers(prevState => ({...prevState}))
+                checkWinner();
                 setTimeout(() => {AIPlay()}, 300);
                 return;
             }
@@ -64,20 +72,16 @@ const useGameLoop = () => {
         }, 300);
     }
 
-    const cellOnClick = (e) => {
-        if(e.target.dataset.player === players.human.getName()){
-            console.error('Click on the enemy gameboard')
-            return;
-        }
+    const cellOnClick = (column, row) => {
         const enemyGameboard = players.AI.getGameboard();
-        const column = Number(e.target.dataset.cord1);
-        const row = Number(e.target.dataset.cord2);
         enemyGameboard.receiveAttack(column, row);
-        checkWinner();
-        if(enemyGameboard.getBoard()[column][row] === 'sunked ship'){
+
+        if (isShipHit(enemyGameboard,column,row)) {
             setPlayers(prevState => ({...prevState}))
+            checkWinner(); 
             return;
         }
+        
         changePlayersTurn();
         AIPlay();
     }
